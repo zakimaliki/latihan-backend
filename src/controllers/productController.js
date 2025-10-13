@@ -1,5 +1,5 @@
-const { selectAll, select, insert, countData, update, deleteData } = require("../models/product")
-const commoHelper = require("../helper/common")
+import { selectAll, select, insert, countData, update, deleteData } from "../models/product.js"
+const commoHelper = require("../helper/common") // Using CommonJS require
 
 const productController = {
     getAllProducts: async (req, res) => {
@@ -39,6 +39,7 @@ const productController = {
     updateProduct: (req, res) => {
         const id = Number(req.params.id)
         const { name, stock, price } = req.body
+
         const data = {
             id,
             name,
@@ -59,4 +60,4 @@ const productController = {
     },
 }
 
-module.exports = productController
+export default productController

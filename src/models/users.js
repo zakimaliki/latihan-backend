@@ -1,4 +1,4 @@
-const Pool = require('../config/db')
+import Pool from '../config/db.js'
 const findEmail = (email) => {
     return new Promise((resolve, reject) =>
         Pool.query(`SELECT * FROM users WHERE email='${email}'`, (error, result) => {
@@ -23,7 +23,4 @@ const create = (data) => {
     )
 }
 
-module.exports = {
-    findEmail,
-    create
-}
+export { findEmail, create }

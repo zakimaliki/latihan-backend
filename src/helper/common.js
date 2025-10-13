@@ -7,4 +7,4 @@ const response = (res, result, status, message) => {
     res.status(status).json(resultPrint)
 }
 
-module.exports = { response }
+export default { response }

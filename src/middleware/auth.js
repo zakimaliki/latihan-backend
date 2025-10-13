@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken')
-const createError = require('http-errors')
+import jwt from 'jsonwebtoken'
+import createError from 'http-errors'
 
 const protect = (req, res, next) => {
     try {
@@ -26,4 +26,4 @@ const protect = (req, res, next) => {
     }
 }
 
-module.exports = { protect }
+export { protect }

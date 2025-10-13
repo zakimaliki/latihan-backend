@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 const generateToken = (payload) => {
     const verifyOpts = {
         expiresIn: '1h',
@@ -8,6 +8,6 @@ const generateToken = (payload) => {
     return token
 }
 
-module.exports = {
+export default {
     generateToken
 }

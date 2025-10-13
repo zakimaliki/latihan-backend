@@ -1,25 +1,26 @@
-const Pool = require('../config/db')
+import Pool from '../config/db.js'
 
 const selectAll = () => {
     return Pool.query('select id, name, stock, price from product')
 }
 
-const select = (id) => {
-    return Pool.query(`select id, name, stock, price from product where id = ${id}`)
+const select = async (id) => {
+    return await Pool.query(`select id, name, stock, price from product where id = $1`, [id]);
 }
 
-const insert = (data) => {
+const insert = async (data) => {
     const { name, stock, price } = data
-    return Pool.query(`INSERT INTO product ("name", "stock", "price") VALUES ('${name}', ${stock} , ${price})`)
+    return await Pool.query(`INSERT INTO product (name, stock, price) VALUES ($1, $2, $3)`, [name, stock, price]);
 }
 
-const update = (data) => {
+const update = async (data) => {
     const { name, stock, price, id } = data
-    return Pool.query(`update product set "name" = '${name}', "stock" = ${stock}, price = ${price} where id = ${id}`)
+    return await Pool.query(`UPDATE product set name = $1, stock = $2, price = $3 where id = $4`, [name, stock, price, id]);
+
 }
 
-const deleteData = (id) => {
-    return Pool.query(`delete from product where id = ${id}`)
+const deleteData = async (id) => {
+    return await Pool.query(`delete from product where id = $1`, [id]);
 }
 
 const countData = () => {
@@ -30,7 +31,7 @@ const findId = (id) => {
     return Pool.query(`select id from product where id ${id}`)
 }
 
-module.exports = {
+export {
     selectAll,
     select,
     insert,

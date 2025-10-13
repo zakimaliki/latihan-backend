@@ -1,12 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const productController = require('../controllers/productController')
-const { protect } = require('../middleware/auth')
+import express from 'express'
+import productController from '../controllers/productController.js'
+import { protect } from '../middleware/auth.js'
 
-router.get('/', protect, productController.getAllProducts)
-router.get('/:id', productController.getDetailProduct)
-router.post('/', productController.insertProduct)
-router.put('/:id', productController.updateProduct)
-router.delete('/:id', productController.deleteProduct)
+const router = express.Router()
 
-module.exports = router
+router.get('/', productController.getAllProducts)
+router.get('/:id', protect, productController.getDetailProduct)
+router.post('/', protect, productController.insertProduct)
+router.put('/:id', protect, productController.updateProduct)
+router.delete('/:id', protect, productController.deleteProduct)
+
+export default router

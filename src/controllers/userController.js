@@ -1,10 +1,10 @@
-const { v4: uuidv4 } = require('uuid');
-const bcrypt = require('bcryptjs');
-const createError = require('http-errors')
-const jwt = require('jsonwebtoken')
-const { findEmail, create } = require('../models/users')
-const commonHelper = require('../helper/common');
-const authHelper = require('../helper/auth');
+const { v4: uuidv4 } = require('uuid') // CommonJS
+import bcrypt from 'bcryptjs' // ES Module
+const createError = require('http-errors') // CommonJS
+import jwt from 'jsonwebtoken' // ES Module
+const { findEmail, create } = require('../models/users') // CommonJS
+const commonHelper = require('../helper/common') // CommonJS
+const authHelper = require('../helper/auth') // CommonJS
 
 const UserController = {
     register: async (req, res, next) => {
@@ -60,5 +60,4 @@ const UserController = {
     },
 }
 
-
-module.exports = UserController 
+export default UserController 
