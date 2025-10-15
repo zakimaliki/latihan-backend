@@ -1,21 +1,21 @@
 import Pool from '../config/db.js'
 
 const selectAll = () => {
-    return Pool.query('select id, name, stock, price from product')
+    return Pool.query('select id, name, stock, price, photo, description from product')
 }
 
 const select = async (id) => {
-    return await Pool.query(`select id, name, stock, price from product where id = $1`, [id]);
+    return await Pool.query(`select id, name, stock, price, photo, description from product where id = $1`, [id]);
 }
 
 const insert = async (data) => {
-    const { name, stock, price } = data
-    return await Pool.query(`INSERT INTO product (name, stock, price) VALUES ($1, $2, $3)`, [name, stock, price]);
+    const { name, stock, price, photo, description } = data
+    return await Pool.query(`INSERT INTO product (name, stock, price, photo, description) VALUES ($1, $2, $3, $4, $5)`, [name, stock, price, photo, description]);
 }
 
 const update = async (data) => {
-    const { name, stock, price, id } = data
-    return await Pool.query(`UPDATE product set name = $1, stock = $2, price = $3 where id = $4`, [name, stock, price, id]);
+    const { name, stock, price, photo, description, id } = data
+    return await Pool.query(`UPDATE product set name = $1, stock = $2, price = $3, photo = $4, description = $5 where id = $6`, [name, stock, price, photo, description, id]);
 
 }
 

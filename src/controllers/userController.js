@@ -3,8 +3,8 @@ import bcrypt from 'bcryptjs' // ES Module
 const createError = require('http-errors') // CommonJS
 import jwt from 'jsonwebtoken' // ES Module
 const { findEmail, create } = require('../models/users') // CommonJS
-const commonHelper = require('../helper/common') // CommonJS
-const authHelper = require('../helper/auth') // CommonJS
+import commonHelper from '../helper/common'// CommonJS
+import authHelper from '../helper/auth' // CommonJS
 
 const UserController = {
     register: async (req, res, next) => {

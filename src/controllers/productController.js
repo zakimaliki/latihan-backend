@@ -1,5 +1,7 @@
 import { selectAll, select, insert, countData, update, deleteData } from "../models/product.js"
-const commoHelper = require("../helper/common") // Using CommonJS require
+import commoHelper from "../helper/common"
+import cloudinary from "../middleware/cloudinary";
+
 
 const productController = {
     getAllProducts: async (req, res) => {
@@ -22,41 +24,83 @@ const productController = {
         }
     },
     insertProduct: async (req, res) => {
-        const { name, stock, price } = req.body
-        const { rows: [count] } = await countData()
-        const id = Number(count.count) + 1;
-        const data = {
-            id,
-            name,
-            stock,
-            price
+        try {
+            const result = await cloudinary.uploader.upload(req.file.path);
+            const photo = result.secure_url;
+            const { name, stock, price, description } = req.body
+            const { rows: [count] } = await countData()
+            const id = Number(count.count) + 1;
+            const data = {
+                id,
+                name,
+                stock,
+                price,
+                photo,
+                description
+            }
+            const insertResult = await insert(data);
+            commoHelper.response(res, insertResult.rows, 201, "Product Created");
+        } catch (error) {
+            console.error('Error in insertProduct:', error);
+            res.status(500).json({
+                status: 'error',
+                statusCode: 500,
+                message: 'Failed to create product',
+                error: error.message
+            });
         }
-        insert(data).then(result => commoHelper.response(res, result.rows, 201, "Product Created"))
-            .catch(error => res.send(error)
-
-            )
     },
-    updateProduct: (req, res) => {
-        const id = Number(req.params.id)
-        const { name, stock, price } = req.body
+    updateProduct: async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            let photo;
 
-        const data = {
-            id,
-            name,
-            stock,
-            price
+            // Check if there's a file upload for photo update
+            if (req.file) {
+                const result = await cloudinary.uploader.upload(req.file.path);
+                photo = result.secure_url;
+            } else {
+                // If no new photo, keep the existing one or use a placeholder
+                photo = req.body.photo || null;
+            }
+
+            const { name, stock, price, description } = req.body;
+
+            const data = {
+                id,
+                name,
+                stock,
+                price,
+                photo,
+                description
+            };
+
+            const result = await update(data);
+            commoHelper.response(res, result.rows, 200, "Product updated");
+        } catch (error) {
+            console.error('Error in updateProduct:', error);
+            res.status(500).json({
+                status: 'error',
+                statusCode: 500,
+                message: 'Failed to update product',
+                error: error.message
+            });
         }
-        update(data).then(result => commoHelper.response(res, result.rows, 200, "product updated"))
-            .catch(error => res.send(error)
-
-            )
     },
-    deleteProduct: (req, res) => {
-        const id = Number(req.params.id)
-        deleteData(id).then(result => commoHelper.response(res, result.rows, 200, "Product deleted"))
-            .catch(error => res.send(error)
-
-            )
+    deleteProduct: async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            const result = await deleteData(id);
+            commoHelper.response(res, result.rows, 200, "Product deleted");
+        } catch (error) {
+            console.error('Error in deleteProduct:', error);
+            res.status(500).json({
+                status: 'error',
+                statusCode: 500,
+                message: 'Failed to delete product',
+                error: error.message
+            });
+        }
     },
 }
 
