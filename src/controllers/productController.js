@@ -1,16 +1,31 @@
 import { selectAll, select, insert, countData, update, deleteData } from "../models/product.js"
 import commoHelper from "../helper/common"
 import cloudinary from "../middleware/cloudinary";
+import commonHelper from '../helper/common'// CommonJS
+
 
 
 const productController = {
     getAllProducts: async (req, res) => {
         try {
-            const result = await selectAll()
-            commoHelper.response(res, result.rows, 200, "Product Success")
+            const page = Number(req.query.page) || 1
+            const limit = Number(req.query.limit) || 5
+            const offset = (page - 1) * limit
+            const sortby = req.query.sortby || "id"
+            const sort = req.query.sort || "ASC"
+            const result = await selectAll({ limit, offset, sort, sortby })
+            const { rows: [count] } = await countData()
+            const totalData = parseInt(count.count)
+            const totalPage = Math.ceil(totalData / limit)
+            const pagination = {
+                currentPage: page,
+                limit: limit,
+                totalData: totalData,
+                totalPage: totalPage
+            }
+            commonHelper.response(res, result.rows, 200, "get data success", pagination)
         } catch (error) {
-            res.send(error)
-                ;
+            console.log(error);
         }
     },
     getDetailProduct: async (req, res) => {

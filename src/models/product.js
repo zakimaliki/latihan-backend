@@ -1,7 +1,8 @@
 import Pool from '../config/db.js'
 
-const selectAll = () => {
-    return Pool.query('select id, name, stock, price, photo, description from product')
+
+const selectAll = ({ limit, offset, sort, sortby }) => {
+    return Pool.query(`SELECT * FROM product ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}`)
 }
 
 const select = async (id) => {
